@@ -25,9 +25,5 @@
      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
    </EmbeddedResource>
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="assets\" />
-  </ItemGroup>
 
 </Project>
