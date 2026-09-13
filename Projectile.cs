@@ -2,14 +2,15 @@ using SFML.Graphics;
 using SFML.System;
 
 namespace smflTest;
-
+//TODO: Just nu spawnar projectilerna på random ställen men riktningen är inte anpassad efter spawnställe.
 public class Projectile
 {
     public Sprite sprite;
     public const float Diameter = 100.0f;
     public const float Radius = Diameter * 0.5f;
     public Vector2f Position;
-    public Vector2f direction = new Vector2f(1, 1) / MathF.Sqrt(2.0f);
+    public Vector2f direction = new Vector2f(MathF.Cos(45), MathF.Sin(45)) / MathF.Sqrt(2.0f); 
+    public float rotation;
     public int Score;
     public int Health = 3;
     public Text gui;
@@ -18,12 +19,13 @@ public class Projectile
     {
         sprite = new Sprite();
         sprite.Texture = new Texture("assets/blueBullet.png");
-        sprite.Position = new Vector2f(Program.ScreenH / 2, Program.ScreenW / 2);
+        sprite.Position = SpawnPosition();
         Vector2f projectileTextureSize = (Vector2f)sprite.Texture.Size;
         sprite.Origin = 0.5f * projectileTextureSize;
         sprite.Scale = new Vector2f(
             Diameter / projectileTextureSize.Y,
             Diameter / projectileTextureSize.Y);
+        sprite.Rotation = 45;
         gui = new Text();
         gui.CharacterSize = 30;
         gui.Font = new Font("assets/vcr.ttf");
@@ -51,12 +53,11 @@ public class Projectile
     public void Update(float dt)
     {
         var newPos = sprite.Position;
-        newPos = direction * dt * 100.0f;
+        newPos += direction * dt * 100.0f;
         sprite.Position = newPos;
-
     }
 
-    public static Vector2f RandomPosition()
+    public static Vector2f SpawnPosition()
     {
         Random random = new Random();
         int side = random.Next(1, 5);
@@ -86,5 +87,62 @@ public class Projectile
 
         return spawn;
 
+    }
+
+    public static Vector2f SpawnDirection(Vector2f position)
+    {
+
+        switch (position.X)
+        {
+            case 0:
+                switch (position.Y)
+                {
+                    case <= Program.ScreenH / 2:
+                        return RandomDirection(0, 60);
+                    case > Program.ScreenH / 2:
+                        return RandomDirection(-60, 0);
+                }
+
+                break;
+            case Program.ScreenW:
+                switch (position.Y)
+                {
+                    case <= Program.ScreenH / 2:
+                        return RandomDirection(120, 180);
+                        
+                    case > Program.ScreenH / 2:
+                        return RandomDirection(180, 240);
+                }
+                break;
+        }
+        switch (position.Y)
+        {
+            case 0:
+                switch (position.X)
+                {
+                    case <= Program.ScreenW / 2:
+                        return RandomDirection(30, 90);
+                    case > Program.ScreenW / 2 :
+                        return RandomDirection(90, 150);
+                }
+                break;
+            case Program.ScreenW:
+                switch (position.X)
+                {
+                    case <= Program.ScreenW / 2:
+                        return RandomDirection(270, 330);
+                    
+                    case > Program.ScreenW / 2:
+                        return RandomDirection(210, 270);
+                }
+                break;
+        }
+        return new Vector2f(0, 0);
+    }
+    public static Vector2f RandomDirection(int lowerDegree, int higherDegree)
+    {
+        Random random = new Random();
+        int degree = random.Next(lowerDegree, higherDegree);
+         return new Vector2f(MathF.Cos(degree), MathF.Sin(degree)) / MathF.Sqrt(2.0f);
     }
 }

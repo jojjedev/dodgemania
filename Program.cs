@@ -10,12 +10,13 @@ public class Program
     public const int ScreenH = 800;
     static void Main(string[] args)
     {
+        Projectile projectile = new Projectile();
+        
         using (var window = new RenderWindow(
                    new VideoMode(ScreenW, ScreenH), "breakout"))
         {
             window.Closed += (o, e) => window.Close();
             Clock clock = new Clock();
-            Projectile projectile = new Projectile();
             while (window.IsOpen)
             {
                 float dt = clock.Restart().AsSeconds();
