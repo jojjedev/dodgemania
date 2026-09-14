@@ -9,28 +9,32 @@ public class Projectile
     public const float Diameter = 100.0f;
     public const float Radius = Diameter * 0.5f;
     public Vector2f Position;
-    public Vector2f direction = new Vector2f(MathF.Cos(45), MathF.Sin(45)) / MathF.Sqrt(2.0f); 
+    public Vector2f direction; 
     public float rotation;
     public int Score;
     public int Health = 3;
     public Text gui;
+    public const float spawnRate = 0.8f;
+    public float spawnTimer = 0.0f;
 
     public Projectile()
     {
         sprite = new Sprite();
         sprite.Texture = new Texture("assets/blueBullet.png");
         sprite.Position = SpawnPosition();
+        sprite.Rotation = SpawnDirection(sprite.Position);
+        direction = new Vector2f(MathF.Cos(sprite.Rotation), MathF.Sin(sprite.Rotation));
+        Console.WriteLine($"sprite.Rotation = {sprite.Rotation}");
         Vector2f projectileTextureSize = (Vector2f)sprite.Texture.Size;
         sprite.Origin = 0.5f * projectileTextureSize;
         sprite.Scale = new Vector2f(
             Diameter / projectileTextureSize.Y,
             Diameter / projectileTextureSize.Y);
-        sprite.Rotation = 45;
         gui = new Text();
         gui.CharacterSize = 30;
         gui.Font = new Font("assets/vcr.ttf");
         gui.FillColor = new Color(168, 3, 3);
-
+        
     }
 
     public void Draw(RenderTarget target)
@@ -52,12 +56,22 @@ public class Projectile
 
     public void Update(float dt)
     {
+        spawnTimer += dt;
+        if (spawnTimer > spawnRate)
+        {
+            spawnTimer = 0.0f;
+        }
         var newPos = sprite.Position;
         newPos += direction * dt * 100.0f;
         sprite.Position = newPos;
     }
 
-    public static Vector2f SpawnPosition()
+    public static Projectile Spawn()
+    {
+        Projectile newProjectile = new Projectile();
+        return newProjectile;
+    }
+    public Vector2f SpawnPosition()
     {
         Random random = new Random();
         int side = random.Next(1, 5);
@@ -68,30 +82,32 @@ public class Projectile
             case 1: // Left side
                 pos = random.Next(0, Program.ScreenW);
                 spawn = new Vector2f(0, pos);
+                Console.WriteLine("Left side");
                 break;
             case 3: // Right side
                 pos = random.Next(0, Program.ScreenW);
                 spawn = new Vector2f(Program.ScreenW, pos);
+                Console.WriteLine("Right side");
                 break;
                 
             case 2: // Top side
                 pos = random.Next(0, Program.ScreenH);
                 spawn = new Vector2f(pos, 0);
+                Console.WriteLine("Top side");
                 break;
                 
             case 4: // Bottom side
                 pos = random.Next(0, Program.ScreenH);
                 spawn = new Vector2f(pos, Program.ScreenH);
+                Console.WriteLine("Bottom side");
                 break;
         }
 
         return spawn;
 
     }
-
-    public static Vector2f SpawnDirection(Vector2f position)
+    public static int SpawnDirection(Vector2f position)
     {
-
         switch (position.X)
         {
             case 0:
@@ -122,11 +138,12 @@ public class Projectile
                 {
                     case <= Program.ScreenW / 2:
                         return RandomDirection(30, 90);
+                        
                     case > Program.ScreenW / 2 :
                         return RandomDirection(90, 150);
                 }
                 break;
-            case Program.ScreenW:
+            case Program.ScreenH:
                 switch (position.X)
                 {
                     case <= Program.ScreenW / 2:
@@ -134,15 +151,17 @@ public class Projectile
                     
                     case > Program.ScreenW / 2:
                         return RandomDirection(210, 270);
+                        
                 }
                 break;
         }
-        return new Vector2f(0, 0);
+        return 0;
     }
-    public static Vector2f RandomDirection(int lowerDegree, int higherDegree)
+    public static int RandomDirection(int lowerDegree, int higherDegree)
     {
         Random random = new Random();
         int degree = random.Next(lowerDegree, higherDegree);
-         return new Vector2f(MathF.Cos(degree), MathF.Sin(degree)) / MathF.Sqrt(2.0f);
+        Console.WriteLine(degree);
+        return degree;
     }
 }
