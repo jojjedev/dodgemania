@@ -3,7 +3,7 @@ using SFML.Window;
 using SFML.System;
 
 namespace smflTest;
-
+//TODO: BLIR NÅGOT KONSTIGT MED HASTIGHETSÖKNINGEN I PROJECTHANDLER
 public class Program
 {
     public const int ScreenW = 1200;
