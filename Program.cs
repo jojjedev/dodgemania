@@ -10,8 +10,8 @@ public class Program
     public const int ScreenH = 800;
     static void Main(string[] args)
     {
-        Projectile projectile = new Projectile();
-        
+        UI gui = new UI();
+        ProjectileHandler projHandler = new ProjectileHandler();
         using (var window = new RenderWindow(
                    new VideoMode(ScreenW, ScreenH), "breakout"))
         {
@@ -23,10 +23,13 @@ public class Program
                 window.DispatchEvents(); // Hanterar alla värdesändringar som har gjorts sedan senaste framen. Ex muspekare flyttats,
                                         // Enemy har dödats eller flyttats på sig etc.
                 // TODO: Update screen
-                projectile.Update(dt);
+                
+                projHandler.Update(dt, gui);
                 window.Clear(new Color(46, 15, 15));
+                gui.Draw(window);
+                projHandler.Draw(window);
                 // TODO: Draw elements on screen
-                projectile.Draw(window);
+                
                 window.Display(); // Draw the actual screen with all elements.
             }
         }
