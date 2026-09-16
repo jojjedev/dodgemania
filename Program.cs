@@ -24,7 +24,6 @@ public class Program
                 window.DispatchEvents(); // Hanterar alla värdesändringar som har gjorts sedan senaste framen. Ex muspekare flyttats,
                                         // Enemy har dödats eller flyttats på sig etc.
                 // TODO: Update screen
-                player.Update(dt);
                 projHandler.Update(dt, gui);
                 window.Clear(new Color(46, 15, 15));
                 gui.Draw(window);

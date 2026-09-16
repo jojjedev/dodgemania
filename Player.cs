@@ -8,8 +8,9 @@ public class Player
 {
     public Sprite sprite;
     public Vector2f size;
-    public Vector2f direction = new Vector2f(1, 0);
-    public float speed = 3.0f;
+    public static Vector2f Direction = new Vector2f(1, 0);
+    public static float Speed = 2.5f;
+    public Vector2f Velocity = Direction * Speed;
 
     public Player()
     {
@@ -24,13 +25,6 @@ public class Player
         sprite.Scale = new Vector2f(
             size.X / playerTextureSize.Y,
             size.Y / playerTextureSize.Y);
-    }
-
-    public void Update(float dt)
-    {
-        var newPos = sprite.Position;
-        newPos += direction * speed * dt * 100.0f;
-        sprite.Position = newPos;
     }
 
     public void Draw(RenderTarget target)
