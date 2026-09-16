@@ -38,6 +38,19 @@ public class PlayerHandler
         "assets/02_Run/run9.png",
         "assets/02_Run/run10.png"
     };
+
+    public static float[] runTiming = new float[] {
+        2 / 11,
+        2 / 11 * 2,
+        2 / 11 * 3,
+        2 / 11 * 4,
+        2 / 11 * 5,
+        2 / 11 * 6,
+        2 / 11 * 7,
+        2 / 11 * 8,
+        2 / 11 * 9,
+        2 / 11 * 10
+    };
     public string[] deadAnimation =
     {
         "assets/05_Dead/dead0.png",
@@ -47,10 +60,7 @@ public class PlayerHandler
         "assets/05_Dead/dead4.png",
         "assets/05_Dead/dead5.png",
         "assets/05_Dead/dead6.png",
-        "assets/05_Dead/dead7.png",
-        "assets/05_Dead/dead8.png",
-        "assets/05_Dead/dead9.png",
-        "assets/05_Dead/dead10.png"
+        "assets/05_Dead/dead7.png"
     };
 
     public void MovePlayer(Player player, float dt)
@@ -93,12 +103,28 @@ public class PlayerHandler
     {
         Player.Direction = new Vector2f(x, y);
         var newPos = player.sprite.Position;
-        newPos += player.Velocity * dt * 100.0f;
+        newPos.X -= dt * 100.0f;
         player.sprite.Position = newPos;
+    }
+
+    public void RunLeftAnimation(Player player, float dt)
+    {
+        player.sprite.Scale = new Vector2f(
+            player.size.X / player.playerTextureSize.Y,
+            player.size.Y / player.playerTextureSize.Y);
+        for (int i = 0; i < runTiming.Length; i++)
+        {
+            switch (runTiming[i])
+            {
+                case < Timer //TODO: FIXA DENNA ANIMATION LOOPEN
+            }
+        }
+        
     }
 
     public void Update(Player player, float dt)
     {
+        Timer += dt;
         MovePlayer(player, dt);
     }
 }

@@ -13,6 +13,7 @@ public class Program
         UI gui = new UI();
         ProjectileHandler projHandler = new ProjectileHandler();
         Player player = new Player();
+        PlayerHandler playerHandler = new PlayerHandler();
         using (var window = new RenderWindow(
                    new VideoMode(ScreenW, ScreenH), "breakout"))
         {
@@ -25,6 +26,7 @@ public class Program
                                         // Enemy har dödats eller flyttats på sig etc.
                 // TODO: Update screen
                 projHandler.Update(dt, gui);
+                playerHandler.Update(player, dt);
                 window.Clear(new Color(46, 15, 15));
                 gui.Draw(window);
                 player.Draw(window);
