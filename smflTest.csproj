@@ -17,6 +17,7 @@
     <EmbeddedResource Include="assets/*.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="assets\idledefault.png" />
   </ItemGroup>
   
   <ItemGroup>
@@ -24,6 +25,10 @@
    <EmbeddedResource Include="assets/*.ttf">
      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
    </EmbeddedResource>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="UnusedAssets\" />
   </ItemGroup>
 
 </Project>

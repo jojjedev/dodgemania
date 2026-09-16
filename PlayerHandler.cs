@@ -41,15 +41,15 @@ public class PlayerHandler
 
     public static float[] runTiming = new float[] {
         2 / 11,
-        2 / 11 * 2,
-        2 / 11 * 3,
-        2 / 11 * 4,
-        2 / 11 * 5,
-        2 / 11 * 6,
-        2 / 11 * 7,
-        2 / 11 * 8,
-        2 / 11 * 9,
-        2 / 11 * 10
+        4 / 11,
+        6 / 11,
+        8 / 11,
+        10 / 11,
+        12 / 11,
+        14 / 11,
+        16 / 11,
+        18 / 11,
+        20 / 11
     };
     public string[] deadAnimation =
     {
@@ -64,24 +64,10 @@ public class PlayerHandler
     };
 
     public void MovePlayer(Player player, float dt)
+
     {
-        if (Keyboard.IsKeyPressed(Keyboard.Key.A))
-        {
-            ChangeDirection(player,dt, -1, 0);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.D))
-        {
-            ChangeDirection(player,dt, 1, 0);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.W))
-        {
-            ChangeDirection(player,dt, 0, -1);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.S))
-        {
-            ChangeDirection(player,dt, 0, 1);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.A) && Keyboard.IsKeyPressed(Keyboard.Key.W))
+        Vector2f oldPos = player.sprite.Position;
+        if (Keyboard.IsKeyPressed(Keyboard.Key.A) && Keyboard.IsKeyPressed(Keyboard.Key.W))
         {
             ChangeDirection(player,dt, -1, -1);
         }
@@ -97,34 +83,143 @@ public class PlayerHandler
         {
             ChangeDirection(player, dt, 1,1);
         }
-    }
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.A))
+        {
+            ChangeDirection(player,dt, -1, 0);
+        }
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.D))
+        {
+            ChangeDirection(player,dt, 1, 0);
+        }
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.W))
+        {
+            ChangeDirection(player,dt, 0, -1);
+        }
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.S))
+        {
+            ChangeDirection(player,dt, 0, 1);
+        }
 
+        if (IsPlayerOutofBounds(player, dt))
+        {
+            player.sprite.Position = oldPos;
+        }
+        
+    }
     public void ChangeDirection(Player player, float dt, float x, float y)
     {
-        Player.Direction = new Vector2f(x, y);
+        
         var newPos = player.sprite.Position;
-        newPos.X -= dt * 100.0f;
+        player.Velocity = new Vector2f(x, y) * Player.Speed;
+        switch (x)
+        {
+            case 1:
+                switch (y)
+                {
+                    case 1:
+                        player.Velocity /= MathF.Sqrt(2.0f);
+                        break;
+                    case -1 :
+                        player.Velocity /= MathF.Sqrt(2.0f);
+                        break;
+                    default:
+                        player.Velocity = player.Velocity;
+                        break;
+                }
+                break;
+            case -1 :
+                switch (y)
+                {
+                    case 1:
+                        player.Velocity /= MathF.Sqrt(2.0f);
+                        break;
+                    case -1 :
+                        player.Velocity /= MathF.Sqrt(2.0f);
+                        break;
+                    default:
+                        player.Velocity = player.Velocity;
+                        break;
+                }
+                break;
+        }
+        newPos += player.Velocity * dt * 100.0f;
         player.sprite.Position = newPos;
     }
 
+    public bool IsPlayerOutofBounds(Player player, float dt) //TODO: Somethings wrong here or in Player.cs with origin
+    {
+        bool left = player.sprite.Position.X < 0;
+        bool right = player.sprite.Position.X + player.sprite.Origin.X >= Program.ScreenW;
+        bool top = player.sprite.Position.Y - player.sprite.Origin.Y < 0;
+        bool bottom = player.sprite.Position.Y + player.sprite.Origin.Y >= Program.ScreenH;
+        return left || right || top || bottom;
+    }
     public void RunLeftAnimation(Player player, float dt)
     {
         player.sprite.Scale = new Vector2f(
             player.size.X / player.playerTextureSize.Y,
             player.size.Y / player.playerTextureSize.Y);
-        for (int i = 0; i < runTiming.Length; i++)
+        if (Timer < 2 / 11)
         {
-            switch (runTiming[i])
-            {
-                case < Timer //TODO: FIXA DENNA ANIMATION LOOPEN
-            }
+            player.sprite.Texture = new Texture(runAnimation[0]);
         }
-        
+
+        if (Timer >= 2 / 11 && Timer < 4 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[1]);
+        }
+
+        if (Timer >= 4 / 11 && Timer < 6 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[2]);
+        }
+
+        if (Timer >= 6 / 11 && Timer < 8 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[3]);
+        }
+
+        if (Timer >= 8 / 11 && Timer < 10 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[4]);
+        }
+
+        if (Timer >= 10 / 11 && Timer < 12 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[5]);
+        }
+
+        if (Timer >= 12 / 11 && Timer < 14 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[6]);
+        }
+
+        if (Timer >= 14 / 11 && Timer < 16 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[7]);
+        }
+
+        if (Timer >= 16 / 11 && Timer < 18 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[8]);
+        }
+
+        if (Timer >= 18 / 11 && Timer < 20 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[9]);
+        }
+
+        if (Timer >= 20 / 11)
+        {
+            player.sprite.Texture = new Texture(runAnimation[10]);
+            Timer = 0;
+        }
     }
 
     public void Update(Player player, float dt)
     {
         Timer += dt;
         MovePlayer(player, dt);
+        
     }
 }
