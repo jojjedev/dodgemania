@@ -12,6 +12,7 @@ public class Program
     {
         UI gui = new UI();
         ProjectileHandler projHandler = new ProjectileHandler();
+        Player player = new Player();
         using (var window = new RenderWindow(
                    new VideoMode(ScreenW, ScreenH), "breakout"))
         {
@@ -23,10 +24,11 @@ public class Program
                 window.DispatchEvents(); // Hanterar alla värdesändringar som har gjorts sedan senaste framen. Ex muspekare flyttats,
                                         // Enemy har dödats eller flyttats på sig etc.
                 // TODO: Update screen
-                
+                player.Update(dt);
                 projHandler.Update(dt, gui);
                 window.Clear(new Color(46, 15, 15));
                 gui.Draw(window);
+                player.Draw(window);
                 projHandler.Draw(window);
                 // TODO: Draw elements on screen
                 

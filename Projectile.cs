@@ -6,9 +6,9 @@ public class Projectile
 {
     public Sprite sprite;
     public Vector2f size;
-    public Vector2f direction;
+    public static Vector2f direction;
     public Vector2f velocity;
-    public const float spawnRate = 0.8f;
+    public static float spawnRate = 0.8f;
     public float spawnTimer = 0.0f;
 
     public Projectile(float speed)
@@ -18,7 +18,7 @@ public class Projectile
         sprite.Position = SpawnPosition();
         sprite.Rotation = SpawnDirection(sprite.Position);
         direction = new Vector2f(MathF.Cos(sprite.Rotation * Single.Pi/180), MathF.Sin(sprite.Rotation * Single.Pi / 180));
-        velocity = direction * speed;
+        velocity = speed * direction;
         size = new Vector2f(
             sprite.GetGlobalBounds().Width * 0.0625f,
             sprite.GetGlobalBounds().Height * 0.0625f);
@@ -50,26 +50,22 @@ public class Projectile
         switch (side)
         {
             case 1: // Left side
-                pos = random.Next(0, Program.ScreenW);
+                pos = random.Next(0, Program.ScreenW - 50);
                 spawn = new Vector2f(0, pos);
-                Console.WriteLine("Left side");
                 break;
             case 3: // Right side
-                pos = random.Next(0, Program.ScreenW);
+                pos = random.Next(0, Program.ScreenW - 50);
                 spawn = new Vector2f(Program.ScreenW, pos);
-                Console.WriteLine("Right side");
                 break;
                 
             case 2: // Top side
-                pos = random.Next(0, Program.ScreenH);
+                pos = random.Next(0, Program.ScreenH - 30);
                 spawn = new Vector2f(pos, 0);
-                Console.WriteLine("Top side");
                 break;
                 
             case 4: // Bottom side
-                pos = random.Next(0, Program.ScreenH);
+                pos = random.Next(0, Program.ScreenH - 30);
                 spawn = new Vector2f(pos, Program.ScreenH);
-                Console.WriteLine("Bottom side");
                 break;
         }
 
@@ -84,8 +80,10 @@ public class Projectile
                 switch (position.Y)
                 {
                     case <= Program.ScreenH / 2: // Lower 
+                        Console.WriteLine("Left lower side");
                         return RandomDirection(0, 60);
                     case > Program.ScreenH / 2:  // Upper
+                        Console.WriteLine("Left upper side");
                         return RandomDirection(-60, 0);
                 }
 
@@ -94,9 +92,11 @@ public class Projectile
                 switch (position.Y)
                 {
                     case <= Program.ScreenH / 2: // Lower
+                        Console.WriteLine("Right lower side");
                         return RandomDirection(120, 180);
                         
                     case > Program.ScreenH / 2:  // Upper
+                        Console.WriteLine("Right upper side");
                         return RandomDirection(180, 240);
                 }
                 break;
@@ -107,9 +107,11 @@ public class Projectile
                 switch (position.X)
                 {
                     case <= Program.ScreenW / 2:  // Left
+                        Console.WriteLine("Top left side");
                         return RandomDirection(30, 90);
                         
                     case > Program.ScreenW / 2 :  // Right
+                        Console.WriteLine("Top right side");
                         return RandomDirection(90, 150);
                 }
                 break;
@@ -117,9 +119,12 @@ public class Projectile
                 switch (position.X)
                 {
                     case <= Program.ScreenW / 2:  // Left
+                        Console.WriteLine("Bottom left side");
+                        
                         return RandomDirection(270, 330);
                     
                     case > Program.ScreenW / 2:  // Right
+                        Console.WriteLine("Bottom right side");
                         return RandomDirection(210, 270);
                         
                 }
@@ -131,7 +136,7 @@ public class Projectile
     {
         Random random = new Random();
         int degree = random.Next(lowerDegree, higherDegree);
-        Console.WriteLine(degree);
+        //Console.WriteLine(degree);
         return degree;
     }
 }

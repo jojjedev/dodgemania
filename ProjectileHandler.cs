@@ -9,26 +9,27 @@ namespace smflTest;
 public class ProjectileHandler
 {
     public float Timer;
-    public float SpeedModifier = 1;
+    public float SpeedModifier = 2;
+    
     public List<Projectile> ListOfProj = new List<Projectile>();
     
     public bool ProjectilePositionCheck(Projectile proj)
     {
         for (int i = 0; i < ListOfProj.Count; i++)
         {
-            if (proj.sprite.Position.X > Program.ScreenW + proj.size.X)
+            if (proj.sprite.Position.X > Program.ScreenW + proj.size.X * 1.5f)
             {
                 return true;
             }
-            if (proj.sprite.Position.X < 0 - proj.size.X)
+            if (proj.sprite.Position.X < 0 - proj.size.X * 1.5f)
             {
                 return true;
             }   
-            if (proj.sprite.Position.Y > Program.ScreenH + proj.size.X)
+            if (proj.sprite.Position.Y > Program.ScreenH + proj.size.X * 1.5f)
             {
                 return true;
             }   
-            if (proj.sprite.Position.Y < 0 - proj.size.X)
+            if (proj.sprite.Position.Y < 0 - proj.size.X * 1.5f)
             {
                 return true;
             }
@@ -36,24 +37,29 @@ public class ProjectileHandler
         return false;
     }
 
-    public void GenerateProjectiles(float dt)
+    public void GenerateProjectiles(float dt, UI gui)
     {
         Timer += dt;
-        if (Timer > 1)
+        if (Timer > Projectile.spawnRate)
         {
+            if (SpeedModifier < 6)
+            {
+                if (gui.Score > 0 && gui.Score % 500 == 0)
+                {
+                    SpeedModifier += 0.5f;
+                    Projectile.spawnRate *= 0.8f;
+                }
+            }
+            
             Projectile newProj = new Projectile(SpeedModifier);
+            Console.WriteLine($"Score: {gui.Score}\nDirection: {newProj.sprite.Rotation}\nSpeed: {SpeedModifier}\nLength of velocity: {MathF.Sqrt(newProj.velocity.X * newProj.velocity.X + newProj.velocity.Y * newProj.velocity.Y)}\n__________________");
             ListOfProj.Add(newProj);
-            Console.WriteLine(ListOfProj.Count);
             Timer = 0;
         }
     }
     public void Update(float dt, UI gui)
     {
-        if (gui.Score > 0 && gui.Score % 500 == 0)
-        {
-            SpeedModifier += 0.5f;
-        }
-        GenerateProjectiles(dt);
+        GenerateProjectiles(dt, gui);
         for (int i = 0; i < ListOfProj.Count; i++)
         {
             ListOfProj[i].Update(dt);
@@ -61,8 +67,6 @@ public class ProjectileHandler
             {
                 ListOfProj.RemoveAt(i);
                 gui.Score += 100;
-                Console.WriteLine("Projectile should have been removed");
-                Console.WriteLine($"{ListOfProj.Count}");
             }
             
         }
