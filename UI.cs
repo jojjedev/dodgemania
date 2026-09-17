@@ -1,14 +1,17 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using static smflTest.Constants;
 
 namespace smflTest;
 
 public class UI
 {
     public int Score;
+    public int HighScore;
     public int InternalScore;
-    public int Health = 3;
+    public int Health = START_HEALTH;
     public Text gui;
+    public static bool GameOver;
 
     public UI()
     {
@@ -29,5 +32,36 @@ public class UI
         gui.DisplayedString = $"Score: {Score}";
         gui.Position = new Vector2f(Program.ScreenW - gui.GetGlobalBounds().Width - 12, 8);
         target.Draw(gui);
+        
+        // Draws "High Score" text
+        gui.DisplayedString = $"High Score: {HighScore}";
+        gui.Position = new Vector2f(Program.ScreenW - gui.GetGlobalBounds().Width - 12, 20 + gui.GetGlobalBounds().Height);
+        target.Draw(gui);
+        
+        // Draws "Game Over" Text
+        if (GameOver)
+        {
+            if (Score > HighScore) HighScore = Score;
+            DisplayGameOver();
+        }
+    }
+
+    public void DisplayGameOver()
+    {
+        Text gameOverText = new Text();
+        gameOverText.DisplayedString = "GAME OVER\nPRESS ENTER TO RESTART";
+        gameOverText.CharacterSize = 50;
+        gameOverText.Origin = new Vector2f(
+            gameOverText.GetGlobalBounds().Width,
+            gameOverText.GetGlobalBounds().Height) * 0.5f;
+        gameOverText.Position = new Vector2f(Program.ScreenW / 2, Program.ScreenH / 2 - gameOverText.GetGlobalBounds().Height);
+        
+        Shape gameOverRect = new RectangleShape(new Vector2f(gameOverText.GetGlobalBounds().Width * 1.2f,
+            gameOverText.GetGlobalBounds().Height * 1.2f));
+        gameOverRect.Origin = gameOverText.Origin;
+        gameOverRect.Position = gameOverText.Position;
+        gameOverRect.FillColor = new Color(65, 65, 65);
+        gameOverRect.OutlineColor = Color.Black;
+
     }
 }

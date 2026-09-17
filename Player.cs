@@ -3,6 +3,7 @@ using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
 using Color = SFML.Graphics.Color;
+using static smflTest.Constants;
 
 namespace smflTest;
 
@@ -10,9 +11,9 @@ public class Player
 {
     public Sprite sprite;
     public static Vector2f size;
-    public const float Length = 100.0f;
+    public const float Length = PLAYER_LENGTH;
     public static Vector2f Direction = new Vector2f(1, 0);
-    public static float Speed = 3.0f;
+    public static float Speed = PLAYER_SPEED_START;
     public Vector2f Velocity;
 
     public Player()
@@ -35,7 +36,7 @@ public class Player
 
     }
 
-    private void DebugDraw(RenderTarget target)
+    /*private void DebugDraw(RenderTarget target)
     {
         Shape rectangle2;
         rectangle2 = new RectangleShape(size);
@@ -46,10 +47,10 @@ public class Player
         rectangle2.FillColor = Color.Transparent;
         target.Draw(rectangle2);
         
-    }
+    }*/
     public void Draw(RenderTarget target)
     {
-        DebugDraw(target);
+        //DebugDraw(target);
         target.Draw(sprite);
     }
 }

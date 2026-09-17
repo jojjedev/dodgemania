@@ -2,6 +2,7 @@
 using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
+using static smflTest.Constants;
 
 
 namespace smflTest;
@@ -9,30 +10,17 @@ namespace smflTest;
 public class ProjectileHandler
 {
     public float Timer;
-    public float SpeedModifier = 2;
-    
+    public float SpeedModifier = PROJECTILE_SPEED_MODIFIER_START;
     public static List<Projectile> ListOfProj = new List<Projectile>();
     
     public bool ProjectilePositionCheck(Projectile proj)
     {
         for (int i = 0; i < ListOfProj.Count; i++)
         {
-            if (proj.sprite.Position.X > Program.ScreenW + proj.size.X * 1.5f)
-            {
-                return true;
-            }
-            if (proj.sprite.Position.X < 0 - proj.size.X * 1.5f)
-            {
-                return true;
-            }   
-            if (proj.sprite.Position.Y > Program.ScreenH + proj.size.X * 1.5f)
-            {
-                return true;
-            }   
-            if (proj.sprite.Position.Y < 0 - proj.size.X * 1.5f)
-            {
-                return true;
-            }
+            return ((proj.sprite.Position.X > Program.ScreenW + proj.size.X * 1.5f) ||
+                    (proj.sprite.Position.X < 0 - proj.size.X * 1.5f) ||
+                    (proj.sprite.Position.Y > Program.ScreenH + proj.size.X * 1.5f) ||
+                    (proj.sprite.Position.Y < 0 - proj.size.X * 1.5f));
         }
         return false;
     }
@@ -40,10 +28,6 @@ public class ProjectileHandler
     public void GenerateProjectiles(float dt, UI gui)
     {
         Timer += dt;
-        if (ListOfProj.Count > 0)
-        {
-            return;
-        }
         if (Timer > Projectile.spawnRate)
         {
             if (SpeedModifier < 6)
@@ -62,6 +46,7 @@ public class ProjectileHandler
     }
     public void Update(float dt, UI gui)
     {
+        if (Program.GameStop) return;
         GenerateProjectiles(dt, gui);
         for (int i = 0; i < ListOfProj.Count; i++)
         {
@@ -77,7 +62,7 @@ public class ProjectileHandler
         
         
     }
-    public void DebugDraw(RenderTarget target, Projectile projectile)
+    /*public void DebugDraw(RenderTarget target, Projectile projectile)
     {
         Shape rectangle2;
         rectangle2 = new RectangleShape(projectile.size);
@@ -88,13 +73,13 @@ public class ProjectileHandler
         rectangle2.FillColor = Color.Transparent;
         rectangle2.Rotation = projectile.sprite.Rotation;
         target.Draw(rectangle2);
-    }
+    }*/
     public void Draw(RenderTarget target)
     {
         foreach (Projectile projectile in ListOfProj)
         {
-            target.Draw(projectile.sprite);
-            DebugDraw(target, projectile);
+            projectile.Draw(target);
+            //DebugDraw(target, projectile);
         }
     }
 }

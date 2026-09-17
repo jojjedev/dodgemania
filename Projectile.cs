@@ -1,5 +1,6 @@
 using SFML.Graphics;
 using SFML.System;
+using static smflTest.Constants;
 
 namespace smflTest;
 public class Projectile
@@ -7,11 +8,10 @@ public class Projectile
     public Shape rectangle;
     public Sprite sprite;
     public Vector2f size;
-    public static Vector2f ResizedOrigin;
-    public const float Length = 60;
+    public const float Length = PROJECTILE_LENGTH;
     public static Vector2f direction;
     public Vector2f velocity;
-    public static float spawnRate = 0.8f;
+    public static float spawnRate = SPAWN_RATE_START;
     public float spawnTimer = 0.0f;
 
     public Projectile(float speed)
@@ -43,18 +43,7 @@ public class Projectile
         rectangle.FillColor = Color.Transparent;
     }
     
-    public void Update(float dt)
-    {
-        spawnTimer += dt;
-        if (spawnTimer > spawnRate)
-        {
-            spawnTimer = 0.0f;
-        }
-        var newPos = sprite.Position;
-        newPos += velocity * dt * 100.0f;
-        sprite.Position = newPos;
-        rectangle.Position = newPos;
-    }
+
     
     public Vector2f SpawnPosition()
     {
@@ -95,10 +84,8 @@ public class Projectile
                 switch (position.Y)
                 {
                     case <= Program.ScreenH / 2: // Lower 
-                        Console.WriteLine("Left lower side");
                         return RandomDirection(0, 60);
                     case > Program.ScreenH / 2:  // Upper
-                        Console.WriteLine("Left upper side");
                         return RandomDirection(-60, 0);
                 }
 
@@ -107,11 +94,9 @@ public class Projectile
                 switch (position.Y)
                 {
                     case <= Program.ScreenH / 2: // Lower
-                        Console.WriteLine("Right lower side");
                         return RandomDirection(120, 180);
                         
                     case > Program.ScreenH / 2:  // Upper
-                        Console.WriteLine("Right upper side");
                         return RandomDirection(180, 240);
                 }
                 break;
@@ -122,11 +107,9 @@ public class Projectile
                 switch (position.X)
                 {
                     case <= Program.ScreenW / 2:  // Left
-                        Console.WriteLine("Top left side");
                         return RandomDirection(30, 90);
                         
                     case > Program.ScreenW / 2 :  // Right
-                        Console.WriteLine("Top right side");
                         return RandomDirection(90, 150);
                 }
                 break;
@@ -134,12 +117,9 @@ public class Projectile
                 switch (position.X)
                 {
                     case <= Program.ScreenW / 2:  // Left
-                        Console.WriteLine("Bottom left side");
-                        
                         return RandomDirection(270, 330);
                     
                     case > Program.ScreenW / 2:  // Right
-                        Console.WriteLine("Bottom right side");
                         return RandomDirection(210, 270);
                         
                 }
@@ -151,7 +131,21 @@ public class Projectile
     {
         Random random = new Random();
         int degree = random.Next(lowerDegree, higherDegree);
-        //Console.WriteLine(degree);
         return degree;
+    }
+    public void Update(float dt)
+    {
+        spawnTimer += dt;
+        if (spawnTimer > spawnRate) spawnTimer = 0.0f;
+        
+        var newPos = sprite.Position;
+        newPos += velocity * dt * 100.0f;
+        sprite.Position = newPos;
+        rectangle.Position = newPos;
+    }
+
+    public void Draw(RenderTarget target)
+    {
+        target.Draw(sprite);
     }
 }

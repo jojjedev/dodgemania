@@ -2,6 +2,7 @@
 using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
+using static smflTest.Constants;
 
 
 namespace smflTest;
@@ -9,8 +10,8 @@ namespace smflTest;
 public class PlayerHandler
 {
     public float Timer;
-
-    public float SpeedModifier = 0;
+    private bool IsInvuln;
+    private float SpeedModifier = 0;
     /*public string[] idleAnimation =
     {
         "assets/01_Idle/idle0.png",
@@ -65,49 +66,30 @@ public class PlayerHandler
         "assets/05_Dead/dead7.png"
     };
 */
-    public void MovePlayer(Player player, float dt)
+    private void MovePlayer(Player player, float dt)
     {
         Vector2f oldPos = player.sprite.Position;
-        if (Keyboard.IsKeyPressed(Keyboard.Key.A) && Keyboard.IsKeyPressed(Keyboard.Key.W))
-        {
-            ChangeDirection(player,dt, -1, -1);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.A) && Keyboard.IsKeyPressed(Keyboard.Key.S))
-        {
-            ChangeDirection(player,dt, -1, 1);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.D) && Keyboard.IsKeyPressed(Keyboard.Key.W))
-        {
-            ChangeDirection(player, dt, 1,-1);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.D) && Keyboard.IsKeyPressed(Keyboard.Key.S))
-        {
-            ChangeDirection(player, dt, 1,1);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.A))
-        {
-            ChangeDirection(player,dt, -1, 0);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.D))
-        {
-            ChangeDirection(player,dt, 1, 0);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.W))
-        {
-            ChangeDirection(player,dt, 0, -1);
-        }
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.S))
-        {
-            ChangeDirection(player,dt, 0, 1);
-        }
-
-        if (IsPlayerOutofBounds(player, dt))
-        {
-            player.sprite.Position = oldPos;
-        }
+            
+        if (Keyboard.IsKeyPressed(Keyboard.Key.A) && Keyboard.IsKeyPressed(Keyboard.Key.W)) ChangeDirection(player,dt, -1, -1);
+        
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.A) && Keyboard.IsKeyPressed(Keyboard.Key.S)) ChangeDirection(player,dt, -1, 1);
+        
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.D) && Keyboard.IsKeyPressed(Keyboard.Key.W)) ChangeDirection(player, dt, 1,-1);
+        
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.D) && Keyboard.IsKeyPressed(Keyboard.Key.S)) ChangeDirection(player, dt, 1,1);
+        
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.A)) ChangeDirection(player,dt, -1, 0);
+        
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.D)) ChangeDirection(player,dt, 1, 0);
+        
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.W)) ChangeDirection(player,dt, 0, -1);
+        
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.S)) ChangeDirection(player,dt, 0, 1);
+        
+        if (IsPlayerOutofBounds(player, dt)) player.sprite.Position = oldPos;
         
     }
-    public void ChangeDirection(Player player, float dt, float x, float y)
+    private void ChangeDirection(Player player, float dt, float x, float y)
     {
         
         var newPos = player.sprite.Position;
@@ -148,19 +130,13 @@ public class PlayerHandler
         player.sprite.Position = newPos;
     }
 
-    public void IncreaseSpeed(UI gui)
+    private void IncreaseSpeed(UI gui)
     {
-        if (gui.InternalScore > 0 && gui.InternalScore % 500 == 0)
-        {
-            gui.InternalScore = 0;
-            if (Player.Speed + SpeedModifier < 6.0f)
-            {
-                SpeedModifier += 0.5f;
-                Console.WriteLine($"{Player.Speed + SpeedModifier}");
-            }
-        }
+        if (gui.InternalScore > 0 && gui.InternalScore % 500 == 0) gui.InternalScore = 0;
+            if (Player.Speed + SpeedModifier < 6.0f) SpeedModifier += 0.5f; 
+        
     }
-    public bool IsPlayerOutofBounds(Player player, float dt) 
+    private bool IsPlayerOutofBounds(Player player, float dt) 
     {
         bool left   = player.sprite.Position.X - Player.size.X / 2< 0;
         bool top    = player.sprite.Position.Y - Player.size.Y / 2< 0;
@@ -230,27 +206,46 @@ public class PlayerHandler
         }
     }*/
 
-    public bool IsPlayerHit(Player player) // TODO: Använd IsPlayerHit för att minska HP med 1 och skapa "InvulnFrames" med en Timer.
+    private bool IsPlayerHit(Player player)
     {
+        
         List<Projectile> projList = ProjectileHandler.ListOfProj;
-
-        for (int i = 0; i < projList.Count; i++)
+        if (!IsInvuln)
         {
-            bool left   = player.sprite.Position.X - Player.size.X / 2 <= projList[i].sprite.Position.X + projList[i].size.X / 2;
-            bool top    = player.sprite.Position.Y - Player.size.Y / 2 <= projList[i].sprite.Position.Y + projList[i].size.Y / 2;
-            bool right  = player.sprite.Position.X + Player.size.X / 2 >= projList[i].sprite.Position.X - projList[i].size.X / 2;
-            bool bottom = player.sprite.Position.Y + Player.size.Y / 2 >= projList[i].sprite.Position.Y - projList[i].size.Y / 2;
-            //Console.WriteLine($"left: {left}\ntop:{top}\nright:{right}\nbottom:{bottom}");
-            return left && top && right && bottom;
-        }
 
+
+            for (int i = 0; i < projList.Count; i++)
+            {
+                bool left = player.sprite.Position.X - Player.size.X / 2 <=
+                            projList[i].sprite.Position.X + projList[i].size.X / 2;
+                bool top = player.sprite.Position.Y - Player.size.Y / 2 <=
+                           projList[i].sprite.Position.Y + projList[i].size.Y / 2;
+                bool right = player.sprite.Position.X + Player.size.X / 2 >=
+                             projList[i].sprite.Position.X - projList[i].size.X / 2;
+                bool bottom = player.sprite.Position.Y + Player.size.Y / 2 >=
+                              projList[i].sprite.Position.Y - projList[i].size.Y / 2;
+                return left && top && right && bottom;
+            }
+        }
         return false;
+    }
+
+    private void TakeDamage(UI gui)
+    {
+        gui.Health--;
+        Timer = -2;
+        IsInvuln = true;
+        
     }
     public void Update(Player player, float dt, UI gui)
     {
+        if (Program.GameStop) return;
         Timer += dt;
+        if (Timer >= 0 && IsInvuln) IsInvuln = false;
+        if (IsPlayerHit(player)) TakeDamage(gui);
         IncreaseSpeed(gui);
         MovePlayer(player, dt);
+        
         
     }
 }
