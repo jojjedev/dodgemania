@@ -4,8 +4,11 @@ using SFML.System;
 namespace smflTest;
 public class Projectile
 {
+    public Shape rectangle;
     public Sprite sprite;
-    public Vector2f size;
+    public Vector2f Resized;
+    public Vector2f ResizedOrigin;
+    public const float Length = 60;
     public static Vector2f direction;
     public Vector2f velocity;
     public static float spawnRate = 0.8f;
@@ -16,17 +19,28 @@ public class Projectile
         sprite = new Sprite();
         sprite.Texture = new Texture("assets/blueBullet.png");
         sprite.Position = SpawnPosition();
-        sprite.Rotation = SpawnDirection(sprite.Position);
-        direction = new Vector2f(MathF.Cos(sprite.Rotation * Single.Pi/180), MathF.Sin(sprite.Rotation * Single.Pi / 180));
+        float rotation = SpawnDirection(sprite.Position);
+        direction = new Vector2f(MathF.Cos(rotation * Single.Pi/180), MathF.Sin(rotation * Single.Pi / 180));
         velocity = speed * direction;
-        size = new Vector2f(
-            sprite.GetGlobalBounds().Width * 0.0625f,
-            sprite.GetGlobalBounds().Height * 0.0625f);
-        Vector2f projectileTextureSize = (Vector2f)sprite.Texture.Size;
-        sprite.Origin = 0.5f * projectileTextureSize;
-        sprite.Scale = new Vector2f(
-            size.X / projectileTextureSize.Y,
-            size.Y / projectileTextureSize.Y);
+        Vector2f projectileTextureSize = (Vector2f)sprite.Texture.Size;         // Projektilens originalstorlek från fil
+        sprite.Origin = 0.5f * projectileTextureSize;                           // Sätter referenspunkten i mitten av originalfilen
+        sprite.Scale = new Vector2f(                                            // Scalear ner storleken med en faktor. INTE NYA STORLEKEN
+            Length / projectileTextureSize.X,
+            Length / projectileTextureSize.X);
+        Resized = new Vector2f(                                                 // Nya storleken fås genom GetGlobalBounds.
+            sprite.GetGlobalBounds().Width,
+            sprite.GetGlobalBounds().Height);
+        ResizedOrigin = 0.5f * Resized;                                         // Sätt nya referenspunkten i mitten av nedscaleade
+        sprite.Rotation = rotation;                                             // Rotera spriten utifrån den nya storleken.
+                                                                                // Behåller hitboxen.
+        
+        rectangle = new RectangleShape(Resized);
+        rectangle.Position = sprite.Origin;
+        rectangle.Rotation = sprite.Rotation;
+        rectangle.Origin = ResizedOrigin;
+        rectangle.OutlineColor = Color.White;
+        rectangle.OutlineThickness = 1;
+        rectangle.FillColor = Color.Transparent;
     }
 
     public void Update(float dt)
@@ -39,6 +53,7 @@ public class Projectile
         var newPos = sprite.Position;
         newPos += velocity * dt * 100.0f;
         sprite.Position = newPos;
+        rectangle.Position = newPos;
     }
     
     public Vector2f SpawnPosition()

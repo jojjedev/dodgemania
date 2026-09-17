@@ -6,6 +6,7 @@ namespace smflTest;
 public class UI
 {
     public int Score;
+    public int InternalScore;
     public int Health = 3;
     public Text gui;
 

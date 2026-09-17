@@ -9,7 +9,9 @@ namespace smflTest;
 public class PlayerHandler
 {
     public float Timer;
-    public string[] idleAnimation =
+
+    public float SpeedModifier = 0;
+    /*public string[] idleAnimation =
     {
         "assets/01_Idle/idle0.png",
         "assets/01_Idle/idle1.png",
@@ -62,9 +64,8 @@ public class PlayerHandler
         "assets/05_Dead/dead6.png",
         "assets/05_Dead/dead7.png"
     };
-
+*/
     public void MovePlayer(Player player, float dt)
-
     {
         Vector2f oldPos = player.sprite.Position;
         if (Keyboard.IsKeyPressed(Keyboard.Key.A) && Keyboard.IsKeyPressed(Keyboard.Key.W))
@@ -110,7 +111,7 @@ public class PlayerHandler
     {
         
         var newPos = player.sprite.Position;
-        player.Velocity = new Vector2f(x, y) * Player.Speed;
+        player.Velocity = new Vector2f(x, y) * (Player.Speed + SpeedModifier);
         switch (x)
         {
             case 1:
@@ -142,19 +143,33 @@ public class PlayerHandler
                 }
                 break;
         }
+        
         newPos += player.Velocity * dt * 100.0f;
         player.sprite.Position = newPos;
+        player.rectangle2.Position = newPos;
     }
 
+    public void IncreaseSpeed(UI gui)
+    {
+        if (gui.InternalScore > 0 && gui.InternalScore % 500 == 0)
+        {
+            gui.InternalScore = 0;
+            if (Player.Speed + SpeedModifier < 6.0f)
+            {
+                SpeedModifier += 0.5f;
+                Console.WriteLine($"{Player.Speed + SpeedModifier}");
+            }
+        }
+    }
     public bool IsPlayerOutofBounds(Player player, float dt) //TODO: Somethings wrong here or in Player.cs with origin
     {
-        bool left = player.sprite.Position.X < 0;
-        bool right = player.sprite.Position.X + player.sprite.Origin.X >= Program.ScreenW;
-        bool top = player.sprite.Position.Y - player.sprite.Origin.Y < 0;
-        bool bottom = player.sprite.Position.Y + player.sprite.Origin.Y >= Program.ScreenH;
+        bool left   = player.sprite.Position.X - Player.Resized.X / 2 < 0 ;
+        bool top    = player.sprite.Position.Y - Player.Resized.Y < 0;
+        bool right  = player.sprite.Position.X + Player.Resized.X >= Program.ScreenW;
+        bool bottom = player.sprite.Position.Y + Player.Resized.Y >= Program.ScreenH;
         return left || right || top || bottom;
     }
-    public void RunLeftAnimation(Player player, float dt)
+    /*public void RunLeftAnimation(Player player, float dt)
     {
         player.sprite.Scale = new Vector2f(
             player.size.X / player.playerTextureSize.Y,
@@ -214,11 +229,29 @@ public class PlayerHandler
             player.sprite.Texture = new Texture(runAnimation[10]);
             Timer = 0;
         }
-    }
+    }*/
 
-    public void Update(Player player, float dt)
+    public bool IsPlayerHit(Player player, ProjectileHandler projectileHandler)
+    {
+        List<Projectile> projList = projectileHandler.ListOfProj;
+        
+        for (int i = 0; i < projList.Count; i++)
+        {
+            Vector2f playerPos = player.sprite.Position;
+            Vector2f bulletPos = projList[i].sprite.Position;
+            bool left   = playerPos.X - Player.Resized.X / 2 < projList[i]..X + projList[i];
+            bool top    = playerPos.Y - Player.Resized.Y < 0;
+            bool right  = playerPos.X + Player.Resized.X >= projList[i].sprite.Position.X;
+            bool bottom = playerPos.Y + Player.Resized.Y >= Program.ScreenH;
+            return left || right || top || bottom;
+        }
+
+        return false;
+    }
+    public void Update(Player player, float dt, UI gui)
     {
         Timer += dt;
+        IncreaseSpeed(gui);
         MovePlayer(player, dt);
         
     }

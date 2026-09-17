@@ -17,19 +17,19 @@ public class ProjectileHandler
     {
         for (int i = 0; i < ListOfProj.Count; i++)
         {
-            if (proj.sprite.Position.X > Program.ScreenW + proj.size.X * 1.5f)
+            if (proj.sprite.Position.X > Program.ScreenW + proj.Resized.X * 1.5f)
             {
                 return true;
             }
-            if (proj.sprite.Position.X < 0 - proj.size.X * 1.5f)
+            if (proj.sprite.Position.X < 0 - proj.Resized.X * 1.5f)
             {
                 return true;
             }   
-            if (proj.sprite.Position.Y > Program.ScreenH + proj.size.X * 1.5f)
+            if (proj.sprite.Position.Y > Program.ScreenH + proj.Resized.X * 1.5f)
             {
                 return true;
             }   
-            if (proj.sprite.Position.Y < 0 - proj.size.X * 1.5f)
+            if (proj.sprite.Position.Y < 0 - proj.Resized.X * 1.5f)
             {
                 return true;
             }
@@ -52,7 +52,6 @@ public class ProjectileHandler
             }
             
             Projectile newProj = new Projectile(SpeedModifier);
-            Console.WriteLine($"Score: {gui.Score}\nDirection: {newProj.sprite.Rotation}\nSpeed: {SpeedModifier}\nLength of velocity: {MathF.Sqrt(newProj.velocity.X * newProj.velocity.X + newProj.velocity.Y * newProj.velocity.Y)}\n__________________");
             ListOfProj.Add(newProj);
             Timer = 0;
         }
@@ -67,6 +66,7 @@ public class ProjectileHandler
             {
                 ListOfProj.RemoveAt(i);
                 gui.Score += 100;
+                gui.InternalScore += 100;
             }
             
         }
@@ -78,6 +78,7 @@ public class ProjectileHandler
         foreach (Projectile projectile in ListOfProj)
         {
             target.Draw(projectile.sprite);
+            target.Draw(projectile.rectangle);
         }
     }
 }

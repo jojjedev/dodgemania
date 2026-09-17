@@ -3,7 +3,6 @@ using SFML.Window;
 using SFML.System;
 
 namespace smflTest;
-//TODO: BLIR NÅGOT KONSTIGT MED HASTIGHETSÖKNINGEN I PROJECTHANDLER
 public class Program
 {
     public const int ScreenW = 1200;
@@ -26,7 +25,7 @@ public class Program
                                         // Enemy har dödats eller flyttats på sig etc.
                 // TODO: Update screen
                 projHandler.Update(dt, gui);
-                playerHandler.Update(player, dt);
+                playerHandler.Update(player, dt, gui);
                 window.Clear(new Color(46, 15, 15));
                 gui.Draw(window);
                 player.Draw(window);
