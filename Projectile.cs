@@ -6,8 +6,8 @@ public class Projectile
 {
     public Shape rectangle;
     public Sprite sprite;
-    public Vector2f Resized;
-    public Vector2f ResizedOrigin;
+    public Vector2f size;
+    public static Vector2f ResizedOrigin;
     public const float Length = 60;
     public static Vector2f direction;
     public Vector2f velocity;
@@ -27,22 +27,22 @@ public class Projectile
         sprite.Scale = new Vector2f(                                            // Scalear ner storleken med en faktor. INTE NYA STORLEKEN
             Length / projectileTextureSize.X,
             Length / projectileTextureSize.X);
-        Resized = new Vector2f(                                                 // Nya storleken fås genom GetGlobalBounds.
+        size = new Vector2f(                                                 // Nya storleken fås genom GetGlobalBounds.
             sprite.GetGlobalBounds().Width,
             sprite.GetGlobalBounds().Height);
-        ResizedOrigin = 0.5f * Resized;                                         // Sätt nya referenspunkten i mitten av nedscaleade
+                                                // Sätt nya referenspunkten i mitten av nedscaleade
         sprite.Rotation = rotation;                                             // Rotera spriten utifrån den nya storleken.
                                                                                 // Behåller hitboxen.
         
-        rectangle = new RectangleShape(Resized);
+        rectangle = new RectangleShape(size);
         rectangle.Position = sprite.Origin;
         rectangle.Rotation = sprite.Rotation;
-        rectangle.Origin = ResizedOrigin;
+        rectangle.Origin = sprite.Origin;
         rectangle.OutlineColor = Color.White;
         rectangle.OutlineThickness = 1;
         rectangle.FillColor = Color.Transparent;
     }
-
+    
     public void Update(float dt)
     {
         spawnTimer += dt;

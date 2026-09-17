@@ -146,7 +146,6 @@ public class PlayerHandler
         
         newPos += player.Velocity * dt * 100.0f;
         player.sprite.Position = newPos;
-        player.rectangle2.Position = newPos;
     }
 
     public void IncreaseSpeed(UI gui)
@@ -161,12 +160,12 @@ public class PlayerHandler
             }
         }
     }
-    public bool IsPlayerOutofBounds(Player player, float dt) //TODO: Somethings wrong here or in Player.cs with origin
+    public bool IsPlayerOutofBounds(Player player, float dt) 
     {
-        bool left   = player.sprite.Position.X - Player.Resized.X / 2 < 0 ;
-        bool top    = player.sprite.Position.Y - Player.Resized.Y < 0;
-        bool right  = player.sprite.Position.X + Player.Resized.X >= Program.ScreenW;
-        bool bottom = player.sprite.Position.Y + Player.Resized.Y >= Program.ScreenH;
+        bool left   = player.sprite.Position.X - Player.size.X / 2< 0;
+        bool top    = player.sprite.Position.Y - Player.size.Y / 2< 0;
+        bool right  = player.sprite.Position.X + Player.size.X / 2>= Program.ScreenW;
+        bool bottom = player.sprite.Position.Y + Player.size.Y / 2>= Program.ScreenH;
         return left || right || top || bottom;
     }
     /*public void RunLeftAnimation(Player player, float dt)
@@ -231,19 +230,18 @@ public class PlayerHandler
         }
     }*/
 
-    public bool IsPlayerHit(Player player, ProjectileHandler projectileHandler)
+    public bool IsPlayerHit(Player player) // TODO: Använd IsPlayerHit för att minska HP med 1 och skapa "InvulnFrames" med en Timer.
     {
-        List<Projectile> projList = projectileHandler.ListOfProj;
-        
+        List<Projectile> projList = ProjectileHandler.ListOfProj;
+
         for (int i = 0; i < projList.Count; i++)
         {
-            Vector2f playerPos = player.sprite.Position;
-            Vector2f bulletPos = projList[i].sprite.Position;
-            bool left   = playerPos.X - Player.Resized.X / 2 < projList[i]..X + projList[i];
-            bool top    = playerPos.Y - Player.Resized.Y < 0;
-            bool right  = playerPos.X + Player.Resized.X >= projList[i].sprite.Position.X;
-            bool bottom = playerPos.Y + Player.Resized.Y >= Program.ScreenH;
-            return left || right || top || bottom;
+            bool left   = player.sprite.Position.X - Player.size.X / 2 <= projList[i].sprite.Position.X + projList[i].size.X / 2;
+            bool top    = player.sprite.Position.Y - Player.size.Y / 2 <= projList[i].sprite.Position.Y + projList[i].size.Y / 2;
+            bool right  = player.sprite.Position.X + Player.size.X / 2 >= projList[i].sprite.Position.X - projList[i].size.X / 2;
+            bool bottom = player.sprite.Position.Y + Player.size.Y / 2 >= projList[i].sprite.Position.Y - projList[i].size.Y / 2;
+            //Console.WriteLine($"left: {left}\ntop:{top}\nright:{right}\nbottom:{bottom}");
+            return left && top && right && bottom;
         }
 
         return false;
