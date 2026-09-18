@@ -27,13 +27,18 @@ public class Program
                 float dt = clock.Restart().AsSeconds();
                 window.DispatchEvents(); // Hanterar alla värdesändringar som har gjorts sedan senaste framen. Ex muspekare flyttats,
                                         // Enemy har dödats eller flyttats på sig etc.
-                if (gui.Health <= 0) ResetGame(projHandler, gui);
+                
                 projHandler.Update(dt, gui);
                 playerHandler.Update(player, dt, gui);
                 window.Clear(new Color(46, 15, 15));
                 gui.Draw(window);
                 player.Draw(window);
                 projHandler.Draw(window);
+                if (gui.Health <= 0)
+                {
+                    gui.DrawEndScreen(window);
+                    ResetGame(projHandler, gui);
+                }
                 
                 window.Display(); // Draw the actual screen with all elements.
             }

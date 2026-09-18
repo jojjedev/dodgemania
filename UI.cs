@@ -38,15 +38,20 @@ public class UI
         gui.Position = new Vector2f(Program.ScreenW - gui.GetGlobalBounds().Width - 12, 20 + gui.GetGlobalBounds().Height);
         target.Draw(gui);
         
-        // Draws "Game Over" Text
-        if (GameOver)
-        {
-            if (Score > HighScore) HighScore = Score;
-            DisplayGameOver();
-        }
     }
 
-    public void DisplayGameOver()
+    public void DrawEndScreen(RenderTarget target)
+    {
+        if (GameOver)
+        {
+            Text text = DisplayGameOverText();
+            Shape rect = DisplayGameOverRect(text);
+            target.Draw(rect);
+            target.Draw(text);
+
+        }
+    }
+    public Text DisplayGameOverText()
     {
         Text gameOverText = new Text();
         gameOverText.DisplayedString = "GAME OVER\nPRESS ENTER TO RESTART";
@@ -55,13 +60,17 @@ public class UI
             gameOverText.GetGlobalBounds().Width,
             gameOverText.GetGlobalBounds().Height) * 0.5f;
         gameOverText.Position = new Vector2f(Program.ScreenW / 2, Program.ScreenH / 2 - gameOverText.GetGlobalBounds().Height);
-        
+        return gameOverText;
+    }
+
+    public Shape DisplayGameOverRect(Text gameOverText)
+    {
         Shape gameOverRect = new RectangleShape(new Vector2f(gameOverText.GetGlobalBounds().Width * 1.2f,
             gameOverText.GetGlobalBounds().Height * 1.2f));
         gameOverRect.Origin = gameOverText.Origin;
         gameOverRect.Position = gameOverText.Position;
         gameOverRect.FillColor = new Color(65, 65, 65);
         gameOverRect.OutlineColor = Color.Black;
-
+        return gameOverRect;
     }
 }
