@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic.CompilerServices;
 using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
@@ -27,38 +28,50 @@ public class Program
                 float dt = clock.Restart().AsSeconds();
                 window.DispatchEvents(); // Hanterar alla värdesändringar som har gjorts sedan senaste framen. Ex muspekare flyttats,
                                         // Enemy har dödats eller flyttats på sig etc.
-                
-                projHandler.Update(dt, gui);
-                playerHandler.Update(player, dt, gui);
-                window.Clear(new Color(46, 15, 15));
-                gui.Draw(window);
-                player.Draw(window);
-                projHandler.Draw(window);
                 if (gui.Health <= 0)
                 {
-                    gui.DrawEndScreen(window);
-                    ResetGame(projHandler, gui);
+                    GameReset(projHandler, gui);
                 }
+
+                if (Keyboard.IsKeyPressed(Keyboard.Key.R))
+                {
+                    GameEnd(projHandler);
+                    Restart(gui);
+                }
+                projHandler.Update(dt, gui);
+                playerHandler.Update(player, dt, gui);
                 
+                window.Clear(new Color(46, 15, 15));
+                
+                player.Draw(window);
+                projHandler.Draw(window);
+                gui.Draw(window);
                 window.Display(); // Draw the actual screen with all elements.
             }
         }
     }
 
-    public static void ResetGame(ProjectileHandler projectileHandler, UI gui)
+    private static void GameReset(ProjectileHandler projectileHandler, UI gui)
+    {
+        GameEnd(projectileHandler);
+        if (Keyboard.IsKeyPressed(Keyboard.Key.Enter)) Restart(gui);
+    }
+
+    private static void Restart(UI gui)
+    {
+        gui.Health = START_HEALTH;
+        gui.Score = 0;
+        GameStop = false;
+        PlayerHandler.Timer = 0;
+    }
+
+    private static void GameEnd(ProjectileHandler projectileHandler)
     {
         Projectile.spawnRate = SPAWN_RATE_START;
         ProjectileHandler.ListOfProj.Clear();
-        projectileHandler.SpeedModifier = PROJECTILE_SPEED_MODIFIER_START;
+        projectileHandler.ProjSpeedModifier = PROJECTILE_SPEED_MODIFIER_START;
+        PlayerHandler.SpeedModifier = 0;
         GameStop = true;
-        
-        if (Keyboard.IsKeyPressed(Keyboard.Key.Enter))
-        {
-            gui.Health = 3;
-            gui.Score = 0;
-            GameStop = false;
-        }
-        
-
     }
+    
 }

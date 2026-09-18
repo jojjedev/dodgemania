@@ -9,9 +9,9 @@ namespace smflTest;
 
 public class PlayerHandler
 {
-    public float Timer;
+    public static float Timer;
     private bool IsInvuln;
-    private float SpeedModifier = 0;
+    public static float SpeedModifier = 0;
     /*public string[] idleAnimation =
     {
         "assets/01_Idle/idle0.png",
@@ -86,7 +86,7 @@ public class PlayerHandler
         
         else if (Keyboard.IsKeyPressed(Keyboard.Key.S)) ChangeDirection(player,dt, 0, 1);
         
-        if (IsPlayerOutofBounds(player, dt)) player.sprite.Position = oldPos;
+        if (IsPlayerOutOfBounds(player, dt)) player.sprite.Position = oldPos;
         
     }
     private void ChangeDirection(Player player, float dt, float x, float y)
@@ -132,11 +132,18 @@ public class PlayerHandler
 
     private void IncreaseSpeed(UI gui)
     {
-        if (gui.InternalScore > 0 && gui.InternalScore % 500 == 0) gui.InternalScore = 0;
-            if (Player.Speed + SpeedModifier < 6.0f) SpeedModifier += 0.5f; 
+        if (gui.InternalScore > 0 && gui.InternalScore % 500 == 0)
+        {
+            gui.InternalScore = 0;
+            if (Player.Speed + SpeedModifier < 6.0f)
+            {
+                SpeedModifier += 0.5f;
+            }
+        }
+             
         
     }
-    private bool IsPlayerOutofBounds(Player player, float dt) 
+    private bool IsPlayerOutOfBounds(Player player, float dt) 
     {
         bool left   = player.sprite.Position.X - Player.size.X / 2< 0;
         bool top    = player.sprite.Position.Y - Player.size.Y / 2< 0;
@@ -208,12 +215,9 @@ public class PlayerHandler
 
     private bool IsPlayerHit(Player player)
     {
-        
         List<Projectile> projList = ProjectileHandler.ListOfProj;
         if (!IsInvuln)
         {
-
-
             for (int i = 0; i < projList.Count; i++)
             {
                 bool left = player.sprite.Position.X - Player.size.X / 2 <=
@@ -224,7 +228,7 @@ public class PlayerHandler
                              projList[i].sprite.Position.X - projList[i].size.X / 2;
                 bool bottom = player.sprite.Position.Y + Player.size.Y / 2 >=
                               projList[i].sprite.Position.Y - projList[i].size.Y / 2;
-                return left && top && right && bottom;
+                if (left && top && right && bottom) return true;
             }
         }
         return false;
@@ -233,8 +237,8 @@ public class PlayerHandler
     private void TakeDamage(UI gui)
     {
         gui.Health--;
-        Timer = -2;
         IsInvuln = true;
+        Timer = -2;
         
     }
     public void Update(Player player, float dt, UI gui)
@@ -242,10 +246,12 @@ public class PlayerHandler
         if (Program.GameStop) return;
         Timer += dt;
         if (Timer >= 0 && IsInvuln) IsInvuln = false;
-        if (IsPlayerHit(player)) TakeDamage(gui);
+        if (IsPlayerHit(player))
+        {
+            TakeDamage(gui);
+        }
         IncreaseSpeed(gui);
         MovePlayer(player, dt);
-        
         
     }
 }
