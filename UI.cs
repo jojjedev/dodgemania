@@ -8,7 +8,7 @@ public class UI
 {
     public int Score;
     public int HighScore;
-    public int InternalScore;
+    public int InternalScore = 0;
     public int Health = START_HEALTH;
     public Text gui;
     public static bool GameOver;
@@ -18,8 +18,9 @@ public class UI
         gui = new Text();
         gui.CharacterSize = 30;
         gui.Font = new Font("assets/vcr.ttf");
-        gui.FillColor = new Color(168, 3, 3);
+        gui.FillColor = new Color(255, 255, 3);
     }
+    
 
     public void Draw(RenderTarget target)
     {
@@ -39,8 +40,8 @@ public class UI
         target.Draw(gui);
         
     }
-
-    public void DrawEndScreen(RenderTarget target)
+    // Game Over skärmförsök nedan
+   /* public void DrawEndScreen(RenderTarget target)
     {
         if (GameOver)
         {
@@ -48,6 +49,7 @@ public class UI
             Shape rect = DisplayGameOverRect(text);
             target.Draw(rect);
             target.Draw(text);
+            Console.WriteLine("End screen ritad");
 
         }
     }
@@ -73,4 +75,5 @@ public class UI
         gameOverRect.OutlineColor = Color.Black;
         return gameOverRect;
     }
+    */
 }

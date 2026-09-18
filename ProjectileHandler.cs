@@ -10,7 +10,7 @@ namespace smflTest;
 public class ProjectileHandler
 {
     public float Timer;
-    public float SpeedModifier = PROJECTILE_SPEED_MODIFIER_START;
+    public float ProjSpeedModifier = PROJECTILE_SPEED_MODIFIER_START;
     public static List<Projectile> ListOfProj = new List<Projectile>();
     
     public bool ProjectilePositionCheck(Projectile proj)
@@ -30,16 +30,16 @@ public class ProjectileHandler
         Timer += dt;
         if (Timer > Projectile.spawnRate)
         {
-            if (SpeedModifier < 6)
+            if (ProjSpeedModifier < 6)
             {
                 if (gui.Score > 0 && gui.Score % 500 == 0)
                 {
-                    SpeedModifier += 0.5f;
+                    ProjSpeedModifier += 0.5f;
                     Projectile.spawnRate *= 0.8f;
                 }
             }
             
-            Projectile newProj = new Projectile(SpeedModifier);
+            Projectile newProj = new Projectile(ProjSpeedModifier);
             ListOfProj.Add(newProj);
             Timer = 0;
         }
@@ -55,6 +55,7 @@ public class ProjectileHandler
             {
                 ListOfProj.RemoveAt(i);
                 gui.Score += 100;
+                if (gui.Score > gui.HighScore) gui.HighScore = gui.Score;
                 gui.InternalScore += 100;
             }
             
