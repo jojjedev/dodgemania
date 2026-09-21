@@ -10,8 +10,7 @@ public class UI
     public int HighScore;
     public int InternalScore = 0;
     public int Health = START_HEALTH;
-    public Text gui;
-    public static bool GameOver;
+    private Text gui;
 
     public UI()
     {

@@ -5,14 +5,14 @@ using static smflTest.Constants;
 namespace smflTest;
 public class Projectile
 {
-    public Shape rectangle;
+    //private Shape rectangle;
     public Sprite sprite;
     public Vector2f size;
-    public const float Length = PROJECTILE_LENGTH;
-    public static Vector2f direction;
-    public Vector2f velocity;
+    private const float Length = PROJECTILE_LENGTH;
+    private static Vector2f direction;
+    private Vector2f velocity;
     public static float spawnRate = SPAWN_RATE_START;
-    public float spawnTimer = 0.0f;
+    private float spawnTimer = 0.0f;
 
     public Projectile(float speed)
     {
@@ -34,13 +34,14 @@ public class Projectile
         sprite.Rotation = rotation;                                             // Rotera spriten utifrån den nya storleken.
                                                                                 // Behåller hitboxen.
         
-        rectangle = new RectangleShape(size);
+        /*rectangle = new RectangleShape(size);
         rectangle.Position = sprite.Origin;
         rectangle.Rotation = sprite.Rotation;
         rectangle.Origin = sprite.Origin;
         rectangle.OutlineColor = Color.White;
         rectangle.OutlineThickness = 1;
         rectangle.FillColor = Color.Transparent;
+        */
     }
     
 
@@ -76,7 +77,7 @@ public class Projectile
         return spawn;
 
     }
-    public static int SpawnDirection(Vector2f position)
+    private static int SpawnDirection(Vector2f position)
     {
         switch (position.X)
         {
@@ -127,7 +128,7 @@ public class Projectile
         }
         return 0;
     }
-    public static int RandomDirection(int lowerDegree, int higherDegree)
+    private static int RandomDirection(int lowerDegree, int higherDegree)
     {
         Random random = new Random();
         int degree = random.Next(lowerDegree, higherDegree);
@@ -141,7 +142,7 @@ public class Projectile
         var newPos = sprite.Position;
         newPos += velocity * dt * 100.0f;
         sprite.Position = newPos;
-        rectangle.Position = newPos;
+        //rectangle.Position = newPos;
     }
 
     public void Draw(RenderTarget target)

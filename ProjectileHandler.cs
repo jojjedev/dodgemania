@@ -9,11 +9,11 @@ namespace smflTest;
 
 public class ProjectileHandler
 {
-    public float Timer;
+    private float Timer;
     public float ProjSpeedModifier = PROJECTILE_SPEED_MODIFIER_START;
     public static List<Projectile> ListOfProj = new List<Projectile>();
     
-    public bool ProjectilePositionCheck(Projectile proj)
+    private bool ProjectilePositionCheck(Projectile proj)
     {
         for (int i = 0; i < ListOfProj.Count; i++)
         {
@@ -25,7 +25,7 @@ public class ProjectileHandler
         return false;
     }
 
-    public void GenerateProjectiles(float dt, UI gui)
+    private void GenerateProjectiles(float dt, UI gui)
     {
         Timer += dt;
         if (Timer > Projectile.spawnRate)

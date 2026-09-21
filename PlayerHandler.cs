@@ -93,7 +93,7 @@ public class PlayerHandler
     {
         
         var newPos = player.sprite.Position;
-        player.Velocity = new Vector2f(x, y) * (Player.Speed + SpeedModifier);
+        player.Velocity = new Vector2f(x, y) * (Player.speed + SpeedModifier);
         switch (x)
         {
             case 1:
@@ -135,7 +135,7 @@ public class PlayerHandler
         if (gui.InternalScore > 0 && gui.InternalScore % 500 == 0)
         {
             gui.InternalScore = 0;
-            if (Player.Speed + SpeedModifier < 6.0f)
+            if (Player.speed + SpeedModifier < 6.0f)
             {
                 SpeedModifier += 0.5f;
             }

@@ -11,9 +11,8 @@ public class Player
 {
     public Sprite sprite;
     public static Vector2f size;
-    public const float Length = PLAYER_LENGTH;
-    public static Vector2f Direction = new Vector2f(1, 0);
-    public static float Speed = PLAYER_SPEED_START;
+    private const float Length = PLAYER_LENGTH;
+    public static float speed = PLAYER_SPEED_START;
     public Vector2f Velocity;
 
     public Player()
@@ -29,10 +28,6 @@ public class Player
         size = new Vector2f(                            // Gör en vector "size" för den önksade spriten som har dess faktiska x och y längd
             sprite.GetGlobalBounds().Width,
             sprite.GetGlobalBounds().Height);
-        
-        
-        
-        
 
     }
 
