@@ -44,9 +44,7 @@ public class Projectile
         */
     }
     
-
-    
-    public Vector2f SpawnPosition()
+    private Vector2f SpawnPosition()
     {
         Random random = new Random();
         int side = random.Next(1, 5);

@@ -86,7 +86,7 @@ public class PlayerHandler
         
         else if (Keyboard.IsKeyPressed(Keyboard.Key.S)) ChangeDirection(player,dt, 0, 1);
         
-        if (IsPlayerOutOfBounds(player, dt)) player.sprite.Position = oldPos;
+        if (IsPlayerOutOfBounds(player)) player.sprite.Position = oldPos;
         
     }
     private void ChangeDirection(Player player, float dt, float x, float y)
@@ -143,7 +143,7 @@ public class PlayerHandler
              
         
     }
-    private bool IsPlayerOutOfBounds(Player player, float dt) 
+    private bool IsPlayerOutOfBounds(Player player) 
     {
         bool left   = player.sprite.Position.X - Player.size.X / 2< 0;
         bool top    = player.sprite.Position.Y - Player.size.Y / 2< 0;
